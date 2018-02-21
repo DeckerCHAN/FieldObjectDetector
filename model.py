@@ -1,6 +1,7 @@
+from functools import reduce
+
 import tensorflow as tf
 
-import network
 
 
 def model(features, labels, mode):
@@ -11,10 +12,35 @@ def model(features, labels, mode):
     # cut_possibility, cut_x, cut_y]
     x = features['x']
 
-    dense = network.network(x)
+    combine_net = tf.layers.max_pooling2d(inputs=
+    tf.layers.conv2d(
+        inputs=x,
+        filters=16,
+        kernel_size=[5, 5],
+        padding="same",
+        activation=tf.nn.relu), pool_size=[2, 2], strides=2)
+
+    for i in range(4 - 1):
+        combine_net = tf.layers.max_pooling2d(inputs=
+        tf.layers.conv2d(
+            inputs=combine_net,
+            filters=16 * (i + 1),
+            kernel_size=[5, 5],
+            padding="same",
+            activation=tf.nn.relu), pool_size=[2, 2], strides=2)
+
+
+    cells = reduce(lambda x, y: x * y, combine_net.shape[1:])
+
+    flatten = tf.reshape(combine_net, [-1, cells])
+
+    dense1 = tf.layers.dense(inputs=flatten, units=1024, activation=tf.nn.relu)
+    dense2 = tf.layers.dense(inputs=dense1, units=1024, activation=tf.nn.relu)
+    dense3 =  tf.layers.dense(inputs=dense2, units=512, activation=tf.nn.relu)
+
 
     dropout = tf.layers.dropout(
-        inputs=dense, rate=0.4, training=mode == tf.estimator.ModeKeys.TRAIN)
+        inputs=dense3, rate=0.4, training=mode == tf.estimator.ModeKeys.TRAIN)
 
     logist = tf.layers.dense(dropout, units=3)
 
