@@ -4,12 +4,7 @@ from tkinter import *
 
 from PIL import Image, ImageTk
 
-gridians = 10
-size = 1000
-offset_rate = 3
-unit = size / gridians
-offset = offset_rate * unit
-corp_size = unit + 2 * offset
+from config import corp_size, offset, unit
 
 root = "./split_sample"
 
@@ -24,6 +19,7 @@ class Sampler(object):
 
             if os.path.isfile(file):
                 self.images.append(file)
+        self.images = sorted(self.images)
 
         self.master = Tk()
 
@@ -40,12 +36,11 @@ class Sampler(object):
         self.master.bind("<Key>", self.key)
         self.w.pack()
 
+        self.w.create_line(0, offset, corp_size, offset, fill="red", dash=(8, 8), width=4)
+        self.w.create_line(0, offset + unit, corp_size, offset + unit, fill="red", dash=(8, 8), width=4)
 
-        self.w.create_line(0, offset, corp_size, offset, fill="red", dash=(8, 8),width = 4)
-        self.w.create_line(0, offset + unit, corp_size, offset + unit, fill="red", dash=(8, 8),width = 4)
-
-        self.w.create_line(offset, 0, offset, corp_size, fill="red", dash=(8, 8),width = 4)
-        self.w.create_line(offset + unit, 0, offset + unit, corp_size, fill="red", dash=(8, 8),width = 4)
+        self.w.create_line(offset, 0, offset, corp_size, fill="red", dash=(8, 8), width=4)
+        self.w.create_line(offset + unit, 0, offset + unit, corp_size, fill="red", dash=(8, 8), width=4)
 
         self.photo_image = None
         self.image_on_canvas = None

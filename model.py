@@ -14,7 +14,7 @@ def model(features, labels, mode):
     dense = network.network(x)
 
     dropout = tf.layers.dropout(
-        inputs=dense, rate=0.2, training=mode == tf.estimator.ModeKeys.TRAIN)
+        inputs=dense, rate=0.4, training=mode == tf.estimator.ModeKeys.TRAIN)
 
     logist = tf.layers.dense(dropout, units=3)
 

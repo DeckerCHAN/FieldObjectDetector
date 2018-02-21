@@ -32,4 +32,5 @@ def network(x):
     flatten = tf.reshape(combine_net, [-1, cells])
 
     dense1 = tf.layers.dense(inputs=flatten, units=1024, activation=tf.nn.relu)
-    return tf.layers.dense(inputs=dense1, units=1024, activation=tf.nn.relu)
+    dense2 = tf.layers.dense(inputs=dense1, units=1024, activation=tf.nn.relu)
+    return tf.layers.dense(inputs=dense2, units=512, activation=tf.nn.relu)

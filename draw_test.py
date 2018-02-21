@@ -1,7 +1,7 @@
 import os
 import uuid
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
 from config import size, gridians, unit, offset
 
@@ -15,11 +15,13 @@ for fn in os.listdir(root):
         im = Image.open(tci)
         im = im.resize((size, size), Image.ANTIALIAS)
 
+        draw = ImageDraw.ImageDraw(im, 'RGBA')
+
         for i in range(gridians):
             for j in range(gridians):
-                corp = (unit * i - offset, unit * j - offset, unit * (i + 1) + offset, unit * (j + 1) + offset)
-                corp = [int(number) for number in corp]
+                talie = (unit * i, unit * j, unit * (i + 1), unit * (j + 1))
+                talie = [int(number) for number in talie]
 
-                image_name = str.format('./split_sample/{0}{1}.jpg', fn, global_index)
-                global_index += 1
-                im.crop(corp).save(image_name)
+                draw.rectangle(talie, (255, 0, 0, 125))
+
+                im.show()
