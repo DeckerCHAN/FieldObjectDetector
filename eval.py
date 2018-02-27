@@ -7,10 +7,10 @@ import os
 import re
 
 from model import model
+from utils import file2lable
 
 test_root = 'split_sample_test'
 
-p = re.compile('(?<=\\[).*(?=\\])')
 
 test_data = list()
 test_label = list()
@@ -20,8 +20,7 @@ for fn in os.listdir(test_root):
     im = Image.open(os.path.abspath(file))
     test_data.append(np.array(im, np.float32))
 
-    items = p.search(file).group().split("-")
-    test_label.append(np.array(items, np.float32))
+    test_label.append(file2lable(file))
 
 classifier = tf.estimator.Estimator(model_fn=model, model_dir=model_dir)
 

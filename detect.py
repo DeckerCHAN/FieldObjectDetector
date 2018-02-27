@@ -16,8 +16,10 @@ global_index = 1
 for fn in os.listdir(root):
     file = os.path.join(root, fn)
     im = Image.open(file)
-
-    draw = ImageDraw.ImageDraw(im, 'RGBA')
+    im = im.resize((size, size), Image.ANTIALIAS)
+    imd = Image.open(file)
+    imd = imd.resize((size, size), Image.ANTIALIAS)
+    draw = ImageDraw.ImageDraw(imd, 'RGBA')
 
     for i in range(gridians):
         for j in range(gridians):
@@ -45,5 +47,5 @@ for fn in os.listdir(root):
                 if int(prediction[2]).__eq__(1):
                     draw.rectangle(talie, (0, 0, 255, 96))
 
-    im.save(os.path.join(result, str.format("{0}.jpg", global_index)))
+    imd.save(os.path.join(result, str.format("{0}.jpg", global_index)))
     global_index += 1

@@ -5,12 +5,11 @@ import re
 
 from PIL import Image
 
-from config import corp_size, model_dir
+from config import corp_size, model_dir, p
 from model import model
+from utils import file2lable
 
 train_root = 'split_sample_labeled'
-
-p = re.compile('(?<=\\[).*(?=\\])')
 
 tf.logging.set_verbosity(tf.logging.INFO)
 
@@ -22,8 +21,7 @@ for fn in os.listdir(train_root):
     im = Image.open(os.path.abspath(file))
     train_data.append(np.array(im, np.float32))
 
-    items = p.search(file).group().split("-")
-    train_lable.append(np.array(items, np.float32))
+    train_lable.append(file2lable(file))
     print(str.format("Added train data{0}", fn))
 
 train_input_fn = tf.estimator.inputs.numpy_input_fn(
